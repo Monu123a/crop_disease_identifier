@@ -24,14 +24,24 @@ const CameraUpload = ({ onImageCapture, selectedImage, loading }) => {
                 video: { facingMode: 'environment' },
                 audio: false
             });
-            videoRef.current.srcObject = stream;
             streamRef.current = stream;
-            setIsCameraActive(true);
+            setIsCameraActive(true); // triggers re-render → <video> mounts → useEffect attaches srcObject
         } catch (err) {
             console.error("Camera access error:", err);
             setCameraError("Could not access camera. Please check permissions.");
         }
     };
+
+    // Attach the stream after the <video> element is rendered in the DOM
+    useEffect(() => {
+        if (isCameraActive && videoRef.current && streamRef.current) {
+            videoRef.current.srcObject = streamRef.current;
+            videoRef.current.play().catch((err) => {
+                console.error("Video play error:", err);
+                setCameraError("Could not start video stream. Please try again.");
+            });
+        }
+    }, [isCameraActive]);
 
     const capturePhoto = () => {
         const video = videoRef.current;
@@ -75,6 +85,7 @@ const CameraUpload = ({ onImageCapture, selectedImage, loading }) => {
                             ref={videoRef}
                             autoPlay
                             playsInline
+                            muted
                             className="live-video"
                         />
                         <div className="camera-controls-overlay">
