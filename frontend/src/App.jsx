@@ -6,7 +6,7 @@ import CameraUpload from './components/CameraUpload';
 import ResultCard from './components/ResultCard';
 import Loader from './components/Loader';
 
-const API_ENDPOINT = 'http://localhost:5000/analyze';
+const API_ENDPOINT = 'http://localhost:5001/analyze';
 
 function App() {
   const [imageFile, setImageFile] = useState(null);
