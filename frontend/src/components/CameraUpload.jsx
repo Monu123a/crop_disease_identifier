@@ -61,14 +61,47 @@ const CameraUpload = ({ onImageCapture, selectedImage, loading }) => {
         }
     };
 
-    const handleGalleryUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            onImageCapture(file, imageUrl);
+
+    /**
+     * Convert any browser-displayable image to a JPEG File via Canvas.
+     * This handles HEIC (macOS/Safari), WebP, AVIF, PNG, etc. so the
+     * backend always receives a format that PIL can read.
+     */
+    const normaliseToJpeg = (rawFile) =>
+        new Promise((resolve, reject) => {
+            const url = URL.createObjectURL(rawFile);
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                canvas.getContext('2d').drawImage(img, 0, 0);
+                URL.revokeObjectURL(url);
+                canvas.toBlob((blob) => {
+                    if (!blob) { reject(new Error('Canvas conversion failed')); return; }
+                    const name = rawFile.name.replace(/\.[^.]+$/, '') + '.jpg';
+                    resolve({ file: new File([blob], name, { type: 'image/jpeg' }), url: URL.createObjectURL(blob) });
+                }, 'image/jpeg', 0.92);
+            };
+            img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not load image')); };
+            img.src = url;
+        });
+
+    const handleGalleryUpload = async (event) => {
+        const rawFile = event.target.files[0];
+        if (!rawFile) return;
+        // Reset input so the same file can be re-selected if needed
+        event.target.value = '';
+        try {
+            const { file, url } = await normaliseToJpeg(rawFile);
+            onImageCapture(file, url);
             stopCamera();
+        } catch (err) {
+            console.error('Image conversion error:', err);
+            setCameraError('Could not read this image format. Please try a JPEG or PNG file.');
         }
     };
+
 
     const triggerGallery = () => galleryInputRef.current.click();
 

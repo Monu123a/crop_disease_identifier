@@ -20,10 +20,7 @@ def analyze():
         return jsonify({"error": "No selected file"}), 400
     
     try:
-        # Read the image bytes directly
         img_bytes = image_file.read()
-        
-        # Run inference using predict.py
         result = predict.predict_disease(img_bytes)
         
         if result:
