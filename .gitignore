@@ -1,0 +1,22 @@
+# ======================
+# Python (ML Service)
+# ======================
+venv/
+__pycache__/
+*.pyc
+
+# Model files (optional — remove if you want model in repo)
+*.h5
+*.keras
+
+# ======================
+# Node / React
+# ======================
+node_modules/
+dist/
+build/
+
+# ======================
+# OS files
+# ======================
+.DS_Store

@@ -1,0 +1,47 @@
+.app-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+}
+
+.interaction-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.analyze-btn {
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(to right, var(--primary-dark), var(--primary-color));
+  color: white;
+  border-radius: 12px;
+  font-size: 1.25rem;
+  box-shadow: 0 10px 20px rgba(27, 94, 32, 0.2);
+}
+
+.error-message {
+  padding: 15px;
+  background: rgba(211, 47, 47, 0.05);
+  border: 1px solid rgba(211, 47, 47, 0.2);
+  color: var(--error-color);
+  text-align: center;
+  font-weight: 600;
+}
+
+footer {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+@media (min-width: 992px) {
+  .app-content.has-result {
+    display: grid;
+    grid-template-columns: 450px 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+}
