@@ -1,6 +1,7 @@
 import numpy as np
 from PIL import Image
 import io
+import hashlib
 
 # Mock disease database
 DISEASES = [
@@ -49,20 +50,17 @@ def predict_disease(image_bytes):
 
         img_array = np.array(img)
 
-        # Per-channel statistics — these vary independently across images
-        # so their combination spreads evenly across all diseases.
+        # MD5 of the pixel bytes → uniform distribution across diseases.
+        # Same image always returns the same result (deterministic),
+        # but different images spread evenly across all diseases.
+        hash_int = int(hashlib.md5(img_array.tobytes()).hexdigest(), 16)
+        index = hash_int % len(DISEASES)
+        result = DISEASES[index].copy()
+
+        # Confidence varies with colour-channel spread
         r_mean = float(img_array[:, :, 0].mean())
         g_mean = float(img_array[:, :, 1].mean())
         b_mean = float(img_array[:, :, 2].mean())
-        px_std = float(img_array.std())
-
-        # Co-prime multipliers ensure the fingerprint doesn't cluster
-        # even when overall brightness is similar across photos.
-        fingerprint = int(r_mean * 4 + g_mean * 7 + b_mean * 13 + px_std * 3)
-        index = fingerprint % len(DISEASES)
-        result = DISEASES[index].copy()
-
-        # Confidence varies with colour-channel spread, not just brightness
         channel_spread = abs(r_mean - g_mean) + abs(g_mean - b_mean)
         result["confidence"] = round(min(result["confidence"] + (channel_spread % 5), 100.0), 1)
 
