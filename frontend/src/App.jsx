@@ -14,12 +14,14 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const [noCropDetected, setNoCropDetected] = useState(false);
 
   const handleImageCapture = (file, url) => {
     setImageFile(file);
     setPreviewUrl(url);
     setResult(null);
     setError(null);
+    setNoCropDetected(false);
   };
 
   const analyzeDisease = async () => {
@@ -37,8 +39,11 @@ function App() {
           'Content-Type': 'multipart/form-data',
         },
       });
-      // Handle the potentially more complex response
-      setResult(response.data);
+      if (response.data?.noCropDetected) {
+        setNoCropDetected(true);
+      } else {
+        setResult(response.data);
+      }
     } catch (err) {
       console.error('Analysis failed:', err);
       if (err.response) {
@@ -59,6 +64,7 @@ function App() {
     setPreviewUrl(null);
     setResult(null);
     setError(null);
+    setNoCropDetected(false);
   };
 
   return (
@@ -76,16 +82,27 @@ function App() {
             loading={loading}
           />
 
-          {previewUrl && !loading && !result && (
+          {previewUrl && !loading && !result && !noCropDetected && (
             <button className="analyze-btn" onClick={analyzeDisease}>
               <span className="btn-icon">⚡</span> Analyze Leaf
             </button>
           )}
 
+          {noCropDetected && (
+            <div className="no-crop-banner glass-panel">
+              <span className="no-crop-icon">🌿</span>
+              <div>
+                <strong>No crop detected</strong>
+                <p>Please upload a clear photo of a plant leaf or vegetable.</p>
+              </div>
+              <button className="reset-btn-small" onClick={resetAll}>Try Again</button>
+            </div>
+          )}
+
           {error && <div className="error-message glass-panel">{error}</div>}
         </section>
 
-        {result && (
+        {result && !noCropDetected && (
           <section className="result-section">
             <ResultCard result={result} onReset={resetAll} />
           </section>

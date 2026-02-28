@@ -30,6 +30,53 @@
   font-weight: 600;
 }
 
+.no-crop-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: rgba(245, 158, 11, 0.07);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 12px;
+  color: #92400e;
+}
+
+.no-crop-banner .no-crop-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.no-crop-banner strong {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 2px;
+  color: #78350f;
+}
+
+.no-crop-banner p {
+  margin: 0;
+  font-size: 0.875rem;
+  opacity: 0.85;
+}
+
+.reset-btn-small {
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 8px 18px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 8px;
+  color: #78350f;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.reset-btn-small:hover {
+  background: rgba(245, 158, 11, 0.25);
+}
+
 footer {
   text-align: center;
   padding: 40px 0;
