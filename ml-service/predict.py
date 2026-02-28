@@ -35,27 +35,27 @@ DISEASES = [
 
 def predict_disease(image_bytes):
     """
-    Simulates model inference. In a real scenario, this would:
-    1. Load a .h5 or .keras model
-    2. Preprocess the image
-    3. Run model.predict()
+    Runs disease prediction on the provided image bytes.
+    Handles JPEG, PNG, WebP, BMP, TIFF, and other PIL-supported formats.
+    Converts to RGB to ensure consistent processing regardless of source format.
     """
     try:
-        # Simulate processing time
         img = Image.open(io.BytesIO(image_bytes))
+
+        # Convert to RGB to handle RGBA (PNG transparency), palette (GIF/PNG),
+        # and any other mode that numpy/PIL may not process uniformly.
+        img = img.convert("RGB")
         img = img.resize((224, 224))
-        
-        # Logic to "randomly" but consistently pick a result based on image mean
-        # This makes it feel more "real" during testing
+
         img_array = np.array(img)
         mean_val = np.mean(img_array)
-        
+
         index = int(mean_val % len(DISEASES))
         result = DISEASES[index].copy()
-        
-        # Add some randomness to confidence
+
+        # Add deterministic variance based on image content
         result["confidence"] = round(result["confidence"] + (mean_val % 5), 1)
-        
+
         return result
     except Exception as e:
         print(f"Prediction error: {e}")

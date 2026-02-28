@@ -41,20 +41,14 @@ function App() {
       setResult(response.data);
     } catch (err) {
       console.error('Analysis failed:', err);
-      // For demonstration let's mock a result if the API is not running
-      // Remove this mock in production
-      /*
-      setResult({
-        disease: "Tomato Late Blight",
-        severity: "High",
-        confidence: 94,
-        treatment: "Apply fungicide containing chlorothalonil or copper. Remove and destroy infected plants to prevent spread.",
-        affectedCrops: "Tomatoes, Potatoes, Peppers",
-        prevention: "Use resistant varieties, improve air circulation, and avoid overhead watering.",
-        nextSteps: ["Isolate the crop area", "Clean all farming tools", "Apply preventative spray to nearby healthy plants"]
-      });
-      */
-      setError('Could not connect to the analysis server. Please ensure the backend is running.');
+      if (err.response) {
+        // Server responded with a non-2xx status — show the real error
+        const msg = err.response.data?.error || `Server error (${err.response.status})`;
+        setError(`Analysis failed: ${msg}`);
+      } else {
+        // Network error — server unreachable
+        setError('Could not connect to the analysis server. Please ensure the backend is running.');
+      }
     } finally {
       setLoading(false);
     }
