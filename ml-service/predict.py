@@ -54,7 +54,7 @@ def predict_disease(image_bytes):
         result = DISEASES[index].copy()
 
         # Add deterministic variance based on image content
-        result["confidence"] = round(result["confidence"] + (mean_val % 5), 1)
+        result["confidence"] = round(min(result["confidence"] + (mean_val % 5), 100.0), 1)
 
         return result
     except Exception as e:
