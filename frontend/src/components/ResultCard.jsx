@@ -55,18 +55,18 @@ const ResultCard = ({ result, onReset }) => {
                 </div>
 
                 <div className="info-section">
-                    <h4>🛡️ Prevention Tips</h4>
+                    <h4>Prevention Tips</h4>
                     <p>{prevention || 'Maintain proper irrigation and ensure secondary airflow between plants.'}</p>
                 </div>
             </div>
 
             <div className="treatment-card">
-                <h4>💊 Recommended Treatment</h4>
+                <h4>Recommended Treatment</h4>
                 <p className="treatment-text">{treatment}</p>
             </div>
 
             <div className="next-steps">
-                <h4>🚀 Next Steps</h4>
+                <h4>Next Steps</h4>
                 <ul className="steps-list">
                     {nextSteps?.map((step, index) => (
                         <li key={index}>{step}</li>
