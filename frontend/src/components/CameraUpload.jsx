@@ -21,7 +21,7 @@ const CameraUpload = ({ onImageCapture, selectedImage, loading }) => {
         setCameraError(null);
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: 'environment' },
+                video: true,
                 audio: false
             });
             streamRef.current = stream;
